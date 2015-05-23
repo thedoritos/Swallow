@@ -1,0 +1,9 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+
+target 'Swallow', :exclusive => true do
+  pod "Swallow", :path => "../"
+
+  pod 'Specta'
+  pod 'Expecta'
+end
