@@ -17,8 +17,6 @@ describe(@"SWLTwitterAPI", ^{
     __block BOOL skip = NO;
     
     beforeAll(^{
-        setAsyncSpecTimeout(5.0);
-        
         waitUntil(^(DoneCallback done){
             ACAccountStore *accountStore = [[ACAccountStore alloc] init];
             SWLAccountManager *accountManager = [[SWLAccountManager alloc] initWithAccountStore:accountStore];

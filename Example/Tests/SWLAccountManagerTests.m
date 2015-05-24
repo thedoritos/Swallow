@@ -18,8 +18,6 @@ describe(@"SWLAccountManager", ^{
     __block ACAccount *brian = nil;
     
     beforeAll(^{
-        setAsyncSpecTimeout(0.1);
-        
         aimee = [[ACAccount alloc] init];
         aimee.username = @"@aimee";
         
