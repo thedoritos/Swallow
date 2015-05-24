@@ -6,8 +6,17 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import <Accounts/Accounts.h>
+
+typedef void (^JsonHandler)(NSDictionary *header, NSDictionary *json);
+typedef void (^JsonArrayHandler)(NSDictionary *header, NSArray *jsonArray);
+typedef void (^ErrorHandler)(NSError *error);
 
 @interface SWLTwitterAPI : NSObject
+
+- (instancetype)initWithAccount:(ACAccount *)account;
+
+- (void)getStatusHomeTimeline:(JsonArrayHandler)success
+                      failure:(ErrorHandler)failure;
 
 @end
