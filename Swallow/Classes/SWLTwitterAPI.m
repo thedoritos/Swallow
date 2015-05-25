@@ -29,11 +29,7 @@
 - (void)getStatusHomeTimeline:(JsonArrayHandler)success
                       failure:(ErrorHandler)failure
 {
-    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter
-                                            requestMethod:SLRequestMethodGET
-                                                      URL:[NSURL URLWithString:@"https://api.twitter.com/1.1/statuses/home_timeline.json"]
-                                               parameters:@{}];
-    request.account = self.account;
+    SLRequest *request = [self createRequest:@"statuses/home_timeline" params:@{}];
     
     [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
         if (error) {
@@ -59,6 +55,52 @@
         
         success(urlResponse.allHeaderFields, jsonObject);
     }];
+}
+
+- (void)getStatusMentionsTimeline:(JsonArrayHandler)success
+                          failure:(ErrorHandler)failure
+{
+    SLRequest *request = [self createRequest:@"statuses/mentions_timeline" params:@{}];
+    
+    [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+        if (error) {
+            failure(error);
+            return;
+        }
+        
+        if (!(200 <= urlResponse.statusCode && urlResponse.statusCode < 300)) {
+            failure([NSError errorWithDomain:@"Swallow" code:0 userInfo:@{
+                NSLocalizedDescriptionKey : @"Bad response status code."
+            }]);
+            return;
+        }
+        
+        NSError *parseError = nil;
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&parseError];
+        if (parseError) {
+            failure([NSError errorWithDomain:@"Swallow" code:0 userInfo:@{
+                NSLocalizedDescriptionKey : @"Bad response body."
+            }]);
+            return;
+        }
+        
+        success(urlResponse.allHeaderFields, jsonObject);
+    }];
+}
+
+#pragma mark - Private
+
+- (SLRequest *)createRequest:(NSString *)endpoint params:(NSDictionary *)params
+{
+    NSString *urlString = [NSString stringWithFormat:@"https://api.twitter.com/1.1/%@.json", endpoint];
+    
+    SLRequest *request = [SLRequest requestForServiceType:SLServiceTypeTwitter
+                                            requestMethod:SLRequestMethodGET
+                                                      URL:[NSURL URLWithString:urlString]
+                                               parameters:params];
+    request.account = self.account;
+    
+    return request;
 }
 
 @end

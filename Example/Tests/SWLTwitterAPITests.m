@@ -38,11 +38,27 @@ describe(@"SWLTwitterAPI", ^{
     });
     
     describe(@"#getStatusesHomeTimeline", ^{
-        it(@"receive response", ^{
+        it(@"receives response", ^{
             if (skip) return;
             
             waitUntil(^(DoneCallback done) {
                 [sut getStatusHomeTimeline:^(NSDictionary *header, NSArray *statuses) {
+                    expect(header).notTo.beNil;
+                    expect(statuses).notTo.beNil;
+                    done();
+                } failure:^(NSError *error) {
+                    done();
+                }];
+            });
+        });
+    });
+    
+    describe(@"#getStatusesMentionsTimeline", ^{
+        it(@"receives response", ^{
+            if (skip) return;
+            
+            waitUntil(^(DoneCallback done) {
+                [sut getStatusMentionsTimeline:^(NSDictionary *header, NSArray *statuses) {
                     expect(header).notTo.beNil;
                     expect(statuses).notTo.beNil;
                     done();
