@@ -19,4 +19,10 @@ typedef void (^ErrorHandler)(NSError *error);
 - (void)getStatusHomeTimeline:(JsonArrayHandler)success
                       failure:(ErrorHandler)failure;
 
+- (void)getStatusMentionsTimeline:(JsonArrayHandler)success
+                          failure:(ErrorHandler)failure;
+
+- (void)getStatusRetweetsOfMe:(JsonArrayHandler)success
+                      failure:(ErrorHandler)failure;
+
 @end
