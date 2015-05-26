@@ -68,6 +68,22 @@ describe(@"SWLTwitterAPI", ^{
             });
         });
     });
+    
+    describe(@"#getStatusesRetweetsOfMe", ^{
+        it(@"receives response", ^{
+            if (skip) return;
+            
+            waitUntil(^(DoneCallback done) {
+                [sut getStatusRetweetsOfMe:^(NSDictionary *header, NSArray *statuses) {
+                    expect(header).notTo.beNil;
+                    expect(statuses).notTo.beNil;
+                    done();
+                } failure:^(NSError *error) {
+                    done();
+                }];
+            });
+        });
+    });
 });
 
 SpecEnd

@@ -88,6 +88,37 @@
     }];
 }
 
+- (void)getStatusRetweetsOfMe:(JsonArrayHandler)success
+                      failure:(ErrorHandler)failure
+{
+    SLRequest *request = [self createRequest:@"statuses/retweets_of_me" params:@{}];
+    
+    [request performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+        if (error) {
+            failure(error);
+            return;
+        }
+        
+        if (!(200 <= urlResponse.statusCode && urlResponse.statusCode < 300)) {
+            failure([NSError errorWithDomain:@"Swallow" code:0 userInfo:@{
+                NSLocalizedDescriptionKey : @"Bad response status code."
+            }]);
+            return;
+        }
+        
+        NSError *parseError = nil;
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:responseData options:NSJSONReadingAllowFragments error:&parseError];
+        if (parseError) {
+            failure([NSError errorWithDomain:@"Swallow" code:0 userInfo:@{
+                NSLocalizedDescriptionKey : @"Bad response body."
+            }]);
+            return;
+        }
+        
+        success(urlResponse.allHeaderFields, jsonObject);
+    }];
+}
+
 #pragma mark - Private
 
 - (SLRequest *)createRequest:(NSString *)endpoint params:(NSDictionary *)params
